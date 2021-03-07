@@ -1,0 +1,20 @@
+. ${DEVENVROOT}/scripts/func.d/bash_utils
+
+if [[ "x$1" == x ]] || [[ "$1" == "--list" ]]; then
+  display -e "available applications:\n$(get_list build)"
+fi
+
+script="${DEVENVROOT}/scripts/build.d/$1"
+if [ ! -f "${script}" ]; then
+  display -e "'$1' not defined"
+fi
+
+if [ -z "${DEVENVFLAVOR}" ] ; then
+  display -e "\$DEVENVFLAVOR not defined"
+fi
+
+display "execute building script \"${script}\" ${@:$(($#+1))} ..."
+bash ${script}
+display "finished building script \"${script}\"."
+
+# vim: set et nu nobomb fenc=utf8 ft=sh ff=unix sw=2 ts=2:

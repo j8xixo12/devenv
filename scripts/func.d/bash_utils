@@ -1,0 +1,51 @@
+LS_PATH=$(unalias ls &> /dev/null; command -v ls) || display -e "couldn't find ls"
+
+display() {
+  local msg=""
+  local ansi_color_reset="\e[0m"
+  local ansi_color_code="${ansi_color_reset}"
+  local return_code=0
+
+  case $1 in
+    -e)
+      ansi_color_code="\e[031m"
+      return_code=46
+      shift
+      ;;
+    -w)
+      ansi_color_code="\e[033m"
+      shift
+      ;;
+  esac
+
+  if [[ "${TERM}" == "xterm*" ]]; then
+      ansi_color_code=""
+      ansi_color_reset=""
+  fi
+
+  msg="${ansi_color_code}$1${ansi_color_reset}"
+  if [[ "${return_code}" == "0" ]]; then
+    echo -e "${msg}"
+  else
+    echo -e "${msg}" >&2
+    exit ${return_code}
+  fi
+}
+
+get_list() {
+  local dir=""
+  case $1 in
+    flavor)
+      dir="${DEVENVROOT}/usr"
+      ;;
+    build)
+      dir="${DEVENVROOT}/scripts/build.d"
+      ;;
+    cmd)
+      dir="${DEVENVROOT}/scripts/cmd.d"
+      ;;
+  esac
+  echo $(${LS_PATH} -1 ${dir} 2>/dev/null)
+}
+
+# vim: set et nu nobomb fenc=utf8 ft=sh ff=unix sw=2 ts=2:

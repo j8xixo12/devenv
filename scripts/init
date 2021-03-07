@@ -1,0 +1,71 @@
+export DEVENVROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+. ${DEVENVROOT}/scripts/env.d/vars
+
+devenv() {
+  . ${DEVENVROOT}/scripts/func.d/bash_utils
+
+  if [[ "$1" == "use" ]]; then
+    shift
+
+    if [[ "x$1" == "x" ]] || [[ "$1" == "--list" ]]; then
+      display "available environments:\n$(get_list flavor)"
+      return
+    fi
+
+    if [ ! -d "${DEVENVROOT}/usr/$1" ]; then
+      display "not hacking"
+      return
+    fi
+
+    if [ ! -z "${DEVENVFLAVOR}" ] ; then
+      . ${DEVENVROOT}/scripts/env.d/devenv_impl nameremove ${DEVENVFLAVOR}
+    fi
+
+    . ${DEVENVROOT}/scripts/env.d/devenv_impl namemunge $1
+    echo "now using '${DEVENVFLAVOR}'"
+  elif [[ "$1" == "off" ]]; then
+    if [ -z "${DEVENVFLAVOR}" ] ; then
+      display "\$DEVENVFLAVOR not defined"
+      return
+    fi
+
+    display "'${DEVENVFLAVOR}' to be turned off"
+    . ${DEVENVROOT}/scripts/env.d/devenv_impl nameremove ${DEVENVFLAVOR}
+  else
+    ${DEVENVROOT}/bin/devenv "$@"
+  fi
+}
+
+_devenv() {
+  . ${DEVENVROOT}/scripts/func.d/bash_utils
+
+  local cur prev opts base
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	base="${COMP_WORDS[0]}"
+	cmd="${COMP_WORDS[1]}"
+
+  case "${cmd}" in
+    use|del)
+      [[ $COMP_CWORD > 2 ]] && return 1
+      COMPREPLY=( $(compgen -W "$(get_list flavor)" -- ${cur}) )
+			return 0
+      ;;
+    build)
+      [[ $COMP_CWORD > 2 ]] && return 1
+      COMPREPLY=( $(compgen -W "$(get_list build)" -- ${cur}) )
+			return 0
+      ;;
+    *)
+      [[ $COMP_CWORD > 1 ]] && return 1
+      cmds=$(get_list cmd)
+      cmds+=" use off"
+      COMPREPLY=($(compgen -W "${cmds}" -- ${cur}))
+      return 0
+      ;;
+  esac
+}
+complete -F _devenv devenv
+
+# vim: set et nu nobomb fenc=utf8 ft=bash ff=unix sw=2 ts=2:

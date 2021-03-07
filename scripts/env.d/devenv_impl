@@ -1,0 +1,41 @@
+namemunge() {
+  if ! echo ${!1} | egrep -q "(^|:)$2($|:)" ; then
+    if [ -z "${!1}" ] ; then
+      eval "$1=$2"
+    else
+      if [ "$3" == "after" ] ; then
+        eval "$1=\$$1:$2"
+      else
+        eval "$1=$2:\$$1"
+      fi
+    fi
+  fi
+  eval "export $1"
+}
+
+# see http://stackoverflow.com/a/370192/1805420
+nameremove() {
+  eval "export $1=$(echo -n ${!1} | awk -v RS=: -v ORS=: -v var="$2" '$0 != var' | sed 's/:*$//')"
+}
+
+case "$(uname)" in
+  Darwin)
+    lib_path=DYLD_LIBRARY_PATH
+    ;;
+  Linux)
+    lib_path=LD_LIBRARY_PATH
+    ;;
+esac
+
+eval "$1 PATH ${DEVENVROOT}/usr/$2/bin"
+eval "$1 ${lib_path} ${DEVENVROOT}/usr/$2/lib"
+
+if [[ "$1" == namemunge ]]; then
+  export DEVENVFLAVOR=$2
+  export DEVENVPREFIX=${DEVENVROOT}/usr/${DEVENVFLAVOR}
+elif [[ "$1" == "nameremove" ]]; then
+  unset DEVENVFLAVOR
+  unset DEVENVPREFIX
+fi
+
+# vim: set et nu nobomb fenc=utf8 ft=bash ff=unix sw=2 ts=2:
