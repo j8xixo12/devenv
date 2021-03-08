@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Copyright (C) 2011 Yung-Yu Chen <yyc@solvcon.net>.
+
+set -e
+source ${DEVENVROOT}/scripts/func.d/build_utils
+
+pkgname=cython
+pkgbranch=${VERSION:-master}
+pkgfull=${pkgname}-${pkgbranch}
+install_dir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
+
+syncgit https://github.com/cython ${pkgname} ${pkgbranch}
+
+pushd ${DEVENVROOT}/src/${DEVENVFLAVOR}/${pkgfull} > /dev/null
+
+# build.
+PYTHON=${install_dir}/bin/python3
+
+buildcmd build.log ${PYTHON} setup.py build -j ${NP}
+buildcmd install.log ${PYTHON} setup.py install
+
+popd > /dev/null
+
+# vim: set et nobomb ft=bash ff=unix fenc=utf8:
