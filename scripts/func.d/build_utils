@@ -1,10 +1,10 @@
 showrealpath () {
- echo "$(cd "$(dirname $1)" && pwd)/$1"
+  echo "$(cd "$(dirname $1)" && pwd)/$1"
 }
 
 buildcmd () {
   echo "run command: ${@:2}"
-  { time "${@:2}" ; } 2>&1 | tee $1 
+  { time "${@:2}" ; } 2>&1 | tee $1
   echo "done; log file: $(showrealpath $1)"
 }
 
@@ -16,9 +16,9 @@ syncgit () {
   local pkgrepo=${giturl}/${pkgname}.git
 
   # unpack (clone)
-  mkdir -p ${DEVENVROOT}/src/${DEVENVFLAVOR}
-  pushd ${DEVENVROOT}/src/${DEVENVFLAVOR} > /dev/null
-  
+  mkdir -p ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src
+  pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src > /dev/null
+
   if [ ! -d ${pkgfull} ] ; then
     git clone -b ${pkgbranch} ${pkgrepo} ${pkgfull}
   else
@@ -27,7 +27,7 @@ syncgit () {
     git pull origin ${pkgbranch}
     popd > /dev/null
   fi
-  
+
   popd > /dev/null
 }
 

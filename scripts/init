@@ -13,7 +13,7 @@ devenv() {
       return
     fi
 
-    if [ ! -d "${DEVENVROOT}/usr/$1" ]; then
+    if [ ! -d "${DEVENVROOT}/flavors/$1" ]; then
       display "not hacking"
       return
     fi

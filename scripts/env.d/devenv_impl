@@ -27,12 +27,12 @@ case "$(uname)" in
     ;;
 esac
 
-eval "$1 PATH ${DEVENVROOT}/usr/$2/bin"
-eval "$1 ${lib_path} ${DEVENVROOT}/usr/$2/lib"
+eval "$1 PATH ${DEVENVROOT}/flavors/$2/usr/bin"
+eval "$1 ${lib_path} ${DEVENVROOT}/flavors/$2/usr/lib"
 
 if [[ "$1" == namemunge ]]; then
   export DEVENVFLAVOR=$2
-  export DEVENVPREFIX=${DEVENVROOT}/usr/${DEVENVFLAVOR}
+  export DEVENVPREFIX=${DEVENVROOT}/flavors/${DEVENVFLAVOR}/usr
 elif [[ "$1" == "nameremove" ]]; then
   unset DEVENVFLAVOR
   unset DEVENVPREFIX
