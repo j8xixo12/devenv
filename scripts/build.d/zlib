@@ -8,14 +8,13 @@ source ${DEVENVROOT}/scripts/func.d/build_utils
 pkgname=zlib
 pkgbranch=${VERSION:-master}
 pkgfull=${pkgname}-${pkgbranch}
-install_dir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
 
 syncgit https://github.com/madler ${pkgname} ${pkgbranch} 
 
-pushd ${DEVENVROOT}/src/${DEVENVFLAVOR}/${pkgfull} > /dev/null
+pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
 
 # build.
-buildcmd configure.log ./configure --prefix=${install_dir}
+buildcmd configure.log ./configure --prefix=${DEVENVPREFIX}
 buildcmd make.log make -j ${NP}
 buildcmd install.log make install
 

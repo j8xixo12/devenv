@@ -8,21 +8,20 @@ source ${DEVENVROOT}/scripts/func.d/bash_utils
 
 pkgname=numpy
 pkgbranch=${VERSION:-main}
-install_dir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
 pkgfull=${pkgname}-${pkgbranch}
 
 # unpack (clone / pull)
 syncgit https://github.com/numpy ${pkgname} ${pkgbranch}
 
-pushd ${DEVENVROOT}/src/${DEVENVFLAVOR}/${pkgfull} > /dev/null
+pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
 
 # prepare files for building.
-if [ ! -e ${install_dir}/bin/python3 ]; then
+if [ ! -e ${DEVENVPREFIX}/bin/python3 ]; then
     display -e "Python3 not exist!!"
     exit
 fi
 
-PYTHON=${install_dir}/bin/python3
+PYTHON=${DEVENVPREFIX}/bin/python3
 
 rm -f site.cfg
 
@@ -31,9 +30,9 @@ if [ $(uname) == Darwin ] ; then
   cat >> site.cfg << EOF
 [openblas]
 libraries = openblas
-library_dirs = ${install_dir}/lib
-include_dirs = ${install_dir}/include/openblas
-runtime_library_dirs = ${install_dir}/lib
+library_dirs = ${DEVENVPREFIX}/lib
+include_dirs = ${DEVENVPREFIX}/include/openblas
+runtime_library_dirs = ${DEVENVPREFIX}/lib
 # [mkl]
 # library_dirs = /opt/intel/oneapi/mkl/2021.1.1/lib
 # include_dirs = /opt/intel/oneapi/mkl/2021.1.1/include
@@ -43,14 +42,14 @@ EOF
 elif [ $(uname) == Linux ] ; then
   cat >> site.cfg << EOF
 # [atlas]
-# library_dirs = ${install_dir}/lib:/usr/lib:/usr/local/lib
-# include_dirs = ${install_dir}/include:${install_dir}/include/atlas:/usr/lib:/usr/local/include
+# library_dirs = ${DEVENVPREFIX}/lib:/usr/lib:/usr/local/lib
+# include_dirs = ${DEVENVPREFIX}/include:${DEVENVPREFIX}/include/atlas:/usr/lib:/usr/local/include
 # atlas_libs = lapack, f77blas, cblas, atlas
 [openblas]
 libraries = openblas
-library_dirs = ${install_dir}/lib
-include_dirs = ${install_dir}/include/openblas
-runtime_library_dirs = ${install_dir}/lib
+library_dirs = ${DEVENVPREFIX}/lib
+include_dirs = ${DEVENVPREFIX}/include/openblas
+runtime_library_dirs = ${DEVENVPREFIX}/lib
 EOF
 fi
 
@@ -73,7 +72,7 @@ fcompiler = gfortran
 EOF
 
 # buildcmd build.log $PYTHON setup.py build -j $NP
-buildcmd build.log ${PYTHON} setup.py build -j ${NP} install --prefix=${install_dir}
+buildcmd build.log ${PYTHON} setup.py build -j ${NP} install --prefix=${DEVENVPREFIX}
 
 popd > /dev/null
 

@@ -8,15 +8,14 @@ source ${DEVENVROOT}/scripts/func.d/build_utils
 pkgname=openssl
 pkgbranch=${VERSION:-master}
 pkgfull=${pkgname}-${pkgbranch}
-install_dir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
 
 syncgit https://github.com/openssl ${pkgname} ${pkgbranch}
 
-pushd ${DEVENVROOT}/src/${DEVENVFLAVOR}/${pkgfull} > /dev/null
+pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
 
 cfgcmd=("./config")
-cfgcmd+=("--prefix=${install_dir}")
-cfgcmd+=("--openssldir=${install_dir}/share/ssl")
+cfgcmd+=("--prefix=${DEVENVPREFIX}")
+cfgcmd+=("--openssldir=${DEVENVPREFIX}/share/ssl")
 
 # build.
 buildcmd configure.log "${cfgcmd[@]}"

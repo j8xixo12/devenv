@@ -10,14 +10,13 @@ source ${DEVENVROOT}/scripts/func.d/build_utils
 pkgname=cpython
 pkgbranch=${VERSION:-master}
 pkgfull=${pkgname}-${pkgbranch}
-install_dir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
 
 syncgit https://github.com/python ${pkgname} ${pkgbranch} 
 
-pushd ${DEVENVROOT}/src/${DEVENVFLAVOR}/${pkgfull} > /dev/null
+pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
 
 # build
-PREFIX=${install_dir}
+PREFIX=${DEVENVPREFIX}
 ARCH=64
 ssldir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
 
