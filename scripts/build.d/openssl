@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Copyright (C) 2011 Yung-Yu Chen <yyc@solvcon.net>.
+
+set -e
+source ${DEVENVROOT}/scripts/func.d/build_utils
+# download.
+pkgname=openssl
+pkgbranch=${VERSION:-master}
+pkgfull=${pkgname}-${pkgbranch}
+
+syncgit https://github.com/openssl ${pkgname} ${pkgbranch}
+
+pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
+
+cfgcmd=("./config")
+cfgcmd+=("--prefix=${DEVENVPREFIX}")
+cfgcmd+=("--openssldir=${DEVENVPREFIX}/share/ssl")
+
+# build.
+buildcmd configure.log "${cfgcmd[@]}"
+buildcmd make.log make -j ${NP}
+buildcmd install.log make -j ${NP} install
+
+popd > /dev/null
+# vim: set et nobomb ft=bash ff=unix fenc=utf8:
