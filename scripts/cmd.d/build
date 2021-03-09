@@ -13,8 +13,9 @@ if [ -z "${DEVENVFLAVOR}" ] ; then
   display -e "\$DEVENVFLAVOR not defined"
 fi
 
-display "execute building script \"${script}\" ${@:$(($#+1))} ..."
-bash ${script}
-display "finished building script \"${script}\"."
+. ${DEVENVROOT}/scripts/func.d/build_utils
+display "Execute building script \"${script}\" ${@:$(($#+1))} ..."
+. ${script}
+display "Finished building script \"${script}\"."
 
 # vim: set et nu nobomb fenc=utf8 ft=sh ff=unix sw=2 ts=2:

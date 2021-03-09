@@ -1,5 +1,4 @@
 set -e
-source ${DEVENVROOT}/scripts/func.d/build_utils
 
 pkgname=OpenBLAS
 pkgbranch=${VERSION:-develop}
@@ -24,7 +23,7 @@ fi
 
 cmakecmd+=("../")
 buildcmd cmake.log "${cmakecmd[@]}"
-buildcmd make.log make install -j $NP 
+buildcmd make.log make install -j $NP
 
 popd > /dev/null
 

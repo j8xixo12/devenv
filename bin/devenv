@@ -10,7 +10,7 @@ if [ -f "${DEVENVROOT}/scripts/cmd.d/${cmd}" ]; then
   shift
   bash "${DEVENVROOT}/scripts/cmd.d/${cmd}" "$@"
 elif [[ -z ${cmd} || ${cmd} = help ]]; then
-  display "Usage: ${bin} [command]
+  display "Usage: ${0##*/} [command]
 
 Description:
 devenv management tool

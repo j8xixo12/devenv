@@ -3,7 +3,6 @@
 # Copyright (C) 2011 Yung-Yu Chen <yyc@solvcon.net>.
 
 set -e
-source ${DEVENVROOT}/scripts/func.d/build_utils
 # download.
 pkgname=openssl
 pkgbranch=${VERSION:-master}

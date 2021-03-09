@@ -3,13 +3,12 @@
 # Copyright (C) 2011 Yung-Yu Chen <yyc@solvcon.net>.
 
 set -e
-source ${DEVENVROOT}/scripts/func.d/build_utils
 
 pkgname=zlib
 pkgbranch=${VERSION:-master}
 pkgfull=${pkgname}-${pkgbranch}
 
-syncgit https://github.com/madler ${pkgname} ${pkgbranch} 
+syncgit https://github.com/madler ${pkgname} ${pkgbranch}
 
 pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
 
