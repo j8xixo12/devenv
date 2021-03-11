@@ -13,9 +13,10 @@ mkdir -p build
 cd build
 
 cmakecmd=("cmake")
+cmakecmd+=("-DCMAKE_Fortran_COMPILER=gfortran")
 cmakecmd+=("-DCMAKE_INSTALL_PREFIX=${DEVENVPREFIX}")
 cmakecmd+=("-DBUILD_SHARED_LIBS=ON")
-cmakecmd+=("-DCMAKE_Fortran_FLAGS="-fPIC -O3"")
+cmakecmd+=("-DCMAKE_Fortran_FLAGS=-fPIC -O3")
 
 if [[ ${DEVENVFLAVOR} == dbg* ]] ; then
   cmakecmd+=("-DCMAKE_BUILD_TYPE=Debug")
