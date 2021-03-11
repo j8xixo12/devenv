@@ -17,11 +17,10 @@ pushd ${DEVENVROOT}/flavors/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
 # build
 PREFIX=${DEVENVPREFIX}
 ARCH=64
-ssldir=${DEVENVROOT}/usr/${DEVENVFLAVOR}
 
 if [ $(uname) == Darwin ]; then
-  export CPPFLAGS="-I${PREFIX}/include -I${ssldir}/include ${CPPFLAGS}"
-  export LDFLAGS="-Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib -L${ssldir}/lib ${LDFLAGS}"
+  export CPPFLAGS="-I${PREFIX}/include ${CPPFLAGS}"
+  export LDFLAGS="-Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib ${LDFLAGS}"
   sed -i -e "s/@OSX_ARCH@/${ARCH}/g" Lib/distutils/unixccompiler.py
 elif [ $(uname) == Linux ]; then
   export CPPFLAGS="-I${PREFIX}/include ${CPPFLAGS}"
@@ -38,20 +37,23 @@ cfgcmd+=("--enable-optimizations")
 cfgcmd+=("--with-lto")
 cfgcmd+=("--with-tcltk-includes=-I${PREFIX}/include")
 cfgcmd+=("--with-tcltk-libs=\"-L${PREFIX}/lib -ltcl8.5 -ltk8.5\"")
+
 if [[ $(uname) == Darwin ]] ; then
-  #cfgcmd+=("--enable-universalsdk")
-  #cfgcmd+=("--with-universal-archs=intel-64")
-  #cfgcmd+=("LLVM_AR=/usr/bin/ar")
-  cfgcmd+=("--with-openssl=${ssldir}")
+  cfgcmd+=("--enable-universalsdk")
+  cfgcmd+=("--with-universal-archs=intel-64")
+  cfgcmd+=("LLVM_AR=/usr/bin/ar")
+  cfgcmd+=("--with-openssl=${DEVENVPREFIX}/lib")
 fi
-#cfgcmd+=("--enable-loadable-sqlite-extensions")
+
+cfgcmd+=("--enable-loadable-sqlite-extensions")
+
 if [[ ${DEVENVFLAVOR} == dbg* ]] ; then
   cfgcmd+=("--with-pydebug")
 fi
 
 # build.
 buildcmd configure.log "${cfgcmd[@]}"
-buildcmd make.log make -j ${NP}
+buildcmd make.log make build_all -j ${NP}
 buildcmd install.log make install
 
 curl https://bootstrap.pypa.io/get-pip.py | ${PREFIX}/bin/python3
