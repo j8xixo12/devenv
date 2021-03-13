@@ -37,12 +37,12 @@ cfgcmd+=("--enable-optimizations")
 cfgcmd+=("--with-lto")
 cfgcmd+=("--with-tcltk-includes=-I${PREFIX}/include")
 cfgcmd+=("--with-tcltk-libs=\"-L${PREFIX}/lib -ltcl8.5 -ltk8.5\"")
+cfgcmd+=("--with-openssl=${DEVENVPREFIX}")
 
 if [[ $(uname) == Darwin ]] ; then
   cfgcmd+=("--enable-universalsdk")
   cfgcmd+=("--with-universal-archs=intel-64")
   cfgcmd+=("LLVM_AR=/usr/bin/ar")
-  cfgcmd+=("--with-openssl=${DEVENVPREFIX}/lib")
 fi
 
 cfgcmd+=("--enable-loadable-sqlite-extensions")
