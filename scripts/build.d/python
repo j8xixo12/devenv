@@ -30,7 +30,6 @@ fi
 cfgcmd=("./configure")
 cfgcmd+=("--prefix=${PREFIX}")
 cfgcmd+=("--enable-shared")
-cfgcmd+=("--without-tests")
 cfgcmd+=("--enable-ipv6")
 cfgcmd+=("--with-ensurepip=no")
 cfgcmd+=("--enable-optimizations")
