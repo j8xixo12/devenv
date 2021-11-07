@@ -38,6 +38,7 @@ jobs:
         devenv add prime
         devenv use prime
         devenv show
+        devenv build sqlite
         devenv launch solvcon
 
     - name: show dependency
@@ -70,10 +71,3 @@ jobs:
         echo "==============="
         echo "python locals:"
         python3 -c 'import numpy, solvcon ; print(locals())'
-
-    - name: test from package
-      run: |
-        source ${GITHUB_WORKSPACE}/devenv/scripts/init
-        devenv use prime
-        devenv show
-        make SC_PURE_PYTHON=1 test_from_package
