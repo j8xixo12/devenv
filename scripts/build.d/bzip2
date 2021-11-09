@@ -2,11 +2,26 @@
 
 set -e
 
-pkgname=bzip2
-pkgbranch=${VERSION:-master}
-pkgfull=$pkgname-$pkgbranch
+if [ -z "${SYNCGIT}" ]; then
+  pkgname=bzip2
+  pkgver=${VERSION:-master}
+  pkgfull=${pkgname}-${pkgver}
+  pkgfn=${pkgfull}.zip
+  pkgurl=https://gitlab.com/bzip2/bzip2/-/archive/${pkgver}/${pkgfn}
 
-syncgit https://gitlab.com/bzip2 ${pkgname} ${pkgbranch} ${pkgfull}
+  download_md5 ${pkgfn} ${pkgurl} 1e9f8675b1346c4a00251cb2dae05c9e
+
+  mkdir -p ${DEVENVFLAVORROOT}/${DEVENVFLAVOR}/src
+    pushd ${DEVENVFLAVORROOT}/${DEVENVFLAVOR}/src
+      unzip ${DEVENVDLROOT}/${pkgfn}
+    popd
+else
+  pkgname=bzip2
+  pkgbranch=${VERSION:-master}
+  pkgfull=$pkgname-$pkgbranch
+
+  syncgit https://gitlab.com/bzip2 ${pkgname} ${pkgbranch} ${pkgfull}
+fi
 
 pushd ${DEVENVFLAVORROOT}/${DEVENVFLAVOR}/src/${pkgfull} > /dev/null
   mkdir -p build
