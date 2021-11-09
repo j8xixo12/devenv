@@ -33,7 +33,7 @@ jobs:
 
     - name: dependency (devenv)
       run: |
-        git clone https://github.com/j8xixo12/devenv -b bzip2_enhance
+        git clone https://github.com/j8xixo12/devenv -b bzip2_tarball
         source ${GITHUB_WORKSPACE}/devenv/scripts/init
         devenv add prime
         devenv use prime
